@@ -1,0 +1,79 @@
+body {
+    background-color: #e6f3ff;
+    background-image:
+        radial-gradient(ellipse 80px 40px at 20% 30%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, transparent 70%),
+        radial-gradient(ellipse 120px 60px at 70% 20%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 50%, transparent 70%),
+        radial-gradient(ellipse 100px 50px at 10% 70%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0.2) 50%, transparent 70%),
+        radial-gradient(ellipse 90px 45px at 80% 80%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, transparent 70%),
+        radial-gradient(ellipse 70px 35px at 40% 60%, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 50%, transparent 70%),
+        radial-gradient(ellipse 110px 55px at 60% 40%, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.3) 50%, transparent 70%);
+    background-size: 200px 150px, 250px 180px, 180px 120px, 220px 160px, 160px 100px, 240px 170px;
+    font-family: inherit;
+    margin: 0;
+    padding: 20px;
+}
+
+center {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin-bottom: 0.3em;
+}
+
+#now-playing {
+    min-height: 1.4em;
+    margin-bottom: 1em;
+    font-style: italic;
+}
+
+#station-list {
+    margin: 1em 0;
+}
+
+.station {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 6px 10px;
+    margin: 4px 0;
+    cursor: pointer;
+    border: 1px solid transparent;
+    text-decoration: none;
+    color: inherit;
+}
+
+.station:hover {
+    text-decoration: underline;
+}
+
+.station.active {
+    font-weight: bold;
+}
+
+.station.loading {
+    opacity: 0.6;
+}
+
+.station-name {
+    font-size: 1em;
+}
+
+.station-desc {
+    font-size: 0.8em;
+    color: #555;
+    margin-left: 1em;
+    text-align: right;
+}
+
+.station.active .station-desc {
+    color: #333;
+}
+
+#status {
+    font-size: 0.8em;
+    color: #666;
+    min-height: 1.2em;
+}
