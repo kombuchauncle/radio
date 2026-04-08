@@ -33,6 +33,11 @@ h1 {
     margin: 1em 0;
 }
 
+.section-header {
+    margin: 1.2em 0 0.2em 10px;
+    font-size: 0.9em;
+}
+
 .station {
     display: flex;
     justify-content: space-between;
