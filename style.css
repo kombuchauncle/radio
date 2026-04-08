@@ -72,22 +72,6 @@ h1 {
     color: #333;
 }
 
-.station-iframe {
-    margin: 4px 0;
-    padding: 6px 10px;
-}
-
-.station-iframe-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 6px;
-}
-
-.station-iframe iframe {
-    display: block;
-}
-
 #status {
     font-size: 0.8em;
     color: #666;
