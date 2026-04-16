@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>admin · radio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<center>
+
+<h1>submissions</h1>
+
+<p><a href="index.html">← back to radio</a></p>
+
+<!--
+  firestore rules for submissions collection:
+    allow create: if true;
+    allow read: if true;       ← TODO: restrict to authenticated admin
+    allow update, delete: if false;
+-->
+
+<div id="submissions-list"><p><small>loading...</small></p></div>
+
+</center>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFirestore, collection, getDocs, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAJaiYPOYFHO22Bm2qxmwC4Tyy0Fk0x2sM",
+  authDomain: "cv-gk-e4e82.firebaseapp.com",
+  projectId: "cv-gk-e4e82",
+  storageBucket: "cv-gk-e4e82.firebasestorage.app",
+  messagingSenderId: "197129878517",
+  appId: "1:197129878517:web:be4307c806df375d6b7ebc"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const list = document.getElementById('submissions-list');
+
+async function loadSubmissions() {
+    try {
+        const q = query(collection(db, 'submissions'), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            list.innerHTML = '<p><small>no submissions yet.</small></p>';
+            return;
+        }
+
+        list.innerHTML = '';
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const date = d.timestamp ? d.timestamp.toDate().toLocaleDateString('en-us', {
+                month: 'long', day: 'numeric', year: 'numeric'
+            }) : 'unknown date';
+
+            const entry = document.createElement('div');
+            entry.className = 'submission-entry';
+            entry.innerHTML = `
+                <p>
+                    <b>${escapeHtml(d.name)}</b> · ${escapeHtml(d.station)} · <i>${escapeHtml(d.type)}</i><br>
+                    <small>${escapeHtml(d.message || '—')}</small><br>
+                    <small style="color:#999">${date}</small>
+                </p>
+            `;
+            list.appendChild(entry);
+        });
+    } catch (err) {
+        console.error(err);
+        list.innerHTML = '<p><small>error loading submissions.</small></p>';
+    }
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+loadSubmissions();
+</script>
+
+</body>
+</html>

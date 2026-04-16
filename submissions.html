@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>submit · radio</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<center>
+
+<h1>submit</h1>
+
+<p><a href="index.html">← back to radio</a></p>
+
+<p><small>song requests, station suggestions, messages</small></p>
+
+<form id="submission-form">
+    <div class="form-row">
+        <label for="name">your name *</label>
+        <input type="text" id="name" required>
+    </div>
+    <div class="form-row">
+        <label for="station">station name *</label>
+        <input type="text" id="station" required placeholder="e.g. wwoz, wqxr">
+    </div>
+    <div class="form-row">
+        <label for="type">type *</label>
+        <select id="type" required>
+            <option value="">— select —</option>
+            <option value="song request">song request</option>
+            <option value="station suggestion">station suggestion</option>
+            <option value="message">message</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="message">details</label>
+        <textarea id="message" rows="4" placeholder="optional"></textarea>
+    </div>
+    <button type="submit">submit</button>
+</form>
+
+<p id="form-status"></p>
+
+</center>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
+import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAJaiYPOYFHO22Bm2qxmwC4Tyy0Fk0x2sM",
+  authDomain: "cv-gk-e4e82.firebaseapp.com",
+  projectId: "cv-gk-e4e82",
+  storageBucket: "cv-gk-e4e82.firebasestorage.app",
+  messagingSenderId: "197129878517",
+  appId: "1:197129878517:web:be4307c806df375d6b7ebc"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const form = document.getElementById('submission-form');
+const status = document.getElementById('form-status');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'submitting...';
+    status.textContent = '';
+
+    try {
+        await addDoc(collection(db, 'submissions'), {
+            name: document.getElementById('name').value.trim(),
+            station: document.getElementById('station').value.trim(),
+            type: document.getElementById('type').value,
+            message: document.getElementById('message').value.trim(),
+            timestamp: serverTimestamp()
+        });
+        form.reset();
+        status.textContent = 'submitted. thank you!';
+        btn.textContent = 'submit';
+        btn.disabled = false;
+    } catch (err) {
+        console.error(err);
+        status.textContent = 'something went wrong. please try again.';
+        btn.textContent = 'submit';
+        btn.disabled = false;
+    }
+});
+</script>
+
+</body>
+</html>
