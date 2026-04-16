@@ -26,15 +26,6 @@
         <input type="text" id="station" required placeholder="e.g. wwoz, wqxr">
     </div>
     <div class="form-row">
-        <label for="type">type *</label>
-        <select id="type" required>
-            <option value="">— select —</option>
-            <option value="song request">song request</option>
-            <option value="station suggestion">station suggestion</option>
-            <option value="message">message</option>
-        </select>
-    </div>
-    <div class="form-row">
         <label for="message">details</label>
         <textarea id="message" rows="4" placeholder="optional"></textarea>
     </div>
@@ -75,7 +66,6 @@ form.addEventListener('submit', async (e) => {
         await addDoc(collection(db, 'submissions'), {
             name: document.getElementById('name').value.trim(),
             station: document.getElementById('station').value.trim(),
-            type: document.getElementById('type').value,
             message: document.getElementById('message').value.trim(),
             timestamp: serverTimestamp()
         });
