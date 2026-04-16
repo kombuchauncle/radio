@@ -12,6 +12,11 @@
 </head>
 <body>
 
+<a href="https://gracekantrow.com" style="position:fixed;top:14px;left:14px;display:flex;align-items:center;gap:6px;text-decoration:none;color:#333;font-family:'Times New Roman',Times,serif;font-size:0.9em;z-index:100;">
+  <img src="/favicon_io/apple-touch-icon.png" width="24" height="24" alt="globe" style="mix-blend-mode:multiply;">
+  go home.
+</a>
+
 <center>
 
 <h1>submit</h1>
@@ -38,13 +43,17 @@
 
 <p id="form-status"></p>
 
+<p><b><i>recent submissions</i></b></p>
+
+<div id="submissions-list"><small>loading...</small></div>
+
 <p><img src="/favicon_io/apple-touch-icon.png" width="40" height="40" alt="logo" style="mix-blend-mode: multiply;"></p>
 
 </center>
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js';
-import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
+import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAJaiYPOYFHO22Bm2qxmwC4Tyy0Fk0x2sM",
@@ -60,6 +69,37 @@ const db = getFirestore(app);
 
 const form = document.getElementById('submission-form');
 const status = document.getElementById('form-status');
+const list = document.getElementById('submissions-list');
+
+function escapeHtml(str) {
+    return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+async function loadSubmissions() {
+    try {
+        const q = query(collection(db, 'submissions'), orderBy('timestamp', 'desc'));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+            list.innerHTML = '<small>no submissions yet.</small>';
+            return;
+        }
+        list.innerHTML = '';
+        snapshot.forEach(doc => {
+            const d = doc.data();
+            const entry = document.createElement('div');
+            entry.className = 'submission-entry';
+            entry.innerHTML = `<p><b>${escapeHtml(d.name)}</b> · ${escapeHtml(d.station)}<br>
+                <small>${escapeHtml(d.message || '')}</small></p>`;
+            list.appendChild(entry);
+        });
+    } catch (err) {
+        list.innerHTML = '<small>could not load submissions.</small>';
+    }
+}
 
 form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -79,6 +119,7 @@ form.addEventListener('submit', async (e) => {
         status.textContent = 'submitted. thank you!';
         btn.textContent = 'submit';
         btn.disabled = false;
+        loadSubmissions();
     } catch (err) {
         console.error(err);
         status.textContent = 'something went wrong. please try again.';
@@ -86,6 +127,8 @@ form.addEventListener('submit', async (e) => {
         btn.disabled = false;
     }
 });
+
+loadSubmissions();
 </script>
 
 </body>
