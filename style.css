@@ -33,7 +33,14 @@ h1 {
     margin: 1em 0;
 }
 
-.section-header {
+.suggested-by {
+    font-size: 0.7em;
+    color: #777;
+    font-style: italic;
+    font-weight: normal;
+}
+
+
     margin: 1.2em 0 0.2em 10px;
     font-size: 0.9em;
 }
